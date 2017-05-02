@@ -1,0 +1,9 @@
+---
+
+- name: Restart uWSGI server
+  service:
+    name: "{{ uwsgi_service }}"
+    state: restarted
+  when: >
+    uswgi_service_started is not defined or
+    not uwsgi_service_started.changed

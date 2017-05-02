@@ -1,0 +1,53 @@
+---
+
+- name: Test distribution
+  assert:
+    that: >
+      ansible_os_family == 'RedHat'
+
+- name: Add EPEL YUM repo
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: "{{ uwsgi_epel_yumrepo_url }}"
+    gpgkey: "{{ uwsgi_epel_yumrepo_gpgkey }}"
+    params: "{{ uwsgi_epel_yumrepo_params }}"
+  when: uwsgi_epel_install
+  tags:
+    - uwsgi_pkg
+
+- name: Install uWSGI
+  package:
+    name: "{{ uwsgi_pkg }}"
+  tags:
+    - uwsgi_pkg
+
+- name: Install plugins
+  package:
+    name: uwsgi-plugin-{{ item }}
+  with_items: "{{ uwsgi_plugins }}"
+  tags:
+    - uwsgi_pkg
+
+- name: Create main config file
+  template:
+    src: uwsgi.ini.j2
+    dest: /etc/uwsgi.ini
+    mode: 0640
+  tags:
+    - uwsgi_config
+
+- name: Make sure the service is enabled
+  service:
+    name: "{{ uwsgi_service }}"
+    enabled: yes
+  tags:
+    - uwsgi_service
+
+- name: Make sure the service is running
+  service:
+    name: "{{ uwsgi_service }}"
+    state: started
+  register: uwsgi_service_started
+  tags:
+    - uwsgi_service
