@@ -37,6 +37,15 @@
   tags:
     - uwsgi_config
 
+- name: Fix permission in the socket directory
+  file:
+    path: "{{ uwsgi_config_uwsgi_stats | dirname }}"
+    owner: "{{ uwsgi_config_uwsgi_uid }}"
+    group: "{{ uwsgi_config_uwsgi_gid }}"
+  when: uwsgi_service_fix_perms == true
+  tags:
+    - uwsgi_service
+
 - name: Make sure the service is enabled
   service:
     name: "{{ uwsgi_service }}"

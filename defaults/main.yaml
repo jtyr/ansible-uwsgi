@@ -21,6 +21,9 @@ uwsgi_plugins: []
 # Name of the service
 uwsgi_service: uwsgi
 
+# Whether to fix directory permissions for the socket file
+uwsgi_service_fix_perms: true
+
 
 # Path to the main config file
 uwsgi_config_path: /etc/uwsgi.ini
