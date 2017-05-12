@@ -12,7 +12,7 @@
     baseurl: "{{ uwsgi_epel_yumrepo_url }}"
     gpgkey: "{{ uwsgi_epel_yumrepo_gpgkey }}"
     params: "{{ uwsgi_epel_yumrepo_params }}"
-  when: uwsgi_epel_install
+  when: uwsgi_epel_install == true
   tags:
     - uwsgi_pkg
 
